@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 import android.wewsun.com.inventoryapp.data.StoreContract.StoreEntry;
+import android.widget.Toast;
 
 public class StoreProvider extends ContentProvider {
 
@@ -19,6 +20,8 @@ public class StoreProvider extends ContentProvider {
     private static final int STORE_ID = 101;
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    private Toast myToast;
 
     static {
         uriMatcher.addURI(StoreContract.CONTENT_AUTHORITY,StoreContract.PATH_STORE, STORE);
@@ -77,10 +80,38 @@ public class StoreProvider extends ContentProvider {
     }
 
     private Uri insertStock(Uri uri, ContentValues values){
-        String name = values.getAsString(StoreEntry.PRODUCT_NAME);
-        if (name == null){
-            throw new IllegalArgumentException("Product require a name");
+
+        if (values.containsKey(StoreEntry.PRODUCT_NAME)) {
+            String name = values.getAsString(StoreEntry.PRODUCT_NAME);
+            if (name == null) {
+                throw new IllegalArgumentException("Product requires a name");
+            }
         }
+        if (values.containsKey(StoreEntry.PRICE)){
+            String price = values.getAsString(StoreEntry.PRICE);
+            if (price == null){
+                throw  new IllegalArgumentException("Product requires a price");
+            }
+        }
+        if (values.containsKey(StoreEntry.QUANTITY)){
+            String quantity = values.getAsString(StoreEntry.QUANTITY);
+            if (quantity == null){
+                throw  new IllegalArgumentException("Product requires quantity");
+            }
+        }
+        if (values.containsKey(StoreEntry.SUPPLIER_NAME)){
+            String supplier = values.getAsString(StoreEntry.SUPPLIER_NAME);
+            if (supplier == null){
+                throw  new IllegalArgumentException("Product requires a supplier name");
+            }
+        }
+        if (values.containsKey(StoreEntry.SUPPLIER_PHONE_NUMBER)){
+            String price = values.getAsString(StoreEntry.SUPPLIER_PHONE_NUMBER);
+            if (price == null){
+                throw  new IllegalArgumentException("Product requires a supplier's phone number");
+            }
+        }
+
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         long id = database.insert(StoreEntry.TABLE_NAME, null, values);
