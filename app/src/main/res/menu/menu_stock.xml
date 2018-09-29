@@ -13,6 +13,6 @@
 
     <item
         android:id="@+id/action_delete"
-        android:title="sale"
-        app:showAsAction="never" />
+        android:title="delete"
+        app:showAsAction="always" />
 </menu>

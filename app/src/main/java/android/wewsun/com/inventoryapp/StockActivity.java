@@ -2,14 +2,17 @@ package android.wewsun.com.inventoryapp;
 
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,8 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.wewsun.com.inventoryapp.data.StoreContract.StoreEntry;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class StockActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -28,6 +33,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     private Uri currentStoreUri;
 
     private EditText productEditText;
+
     private EditText priceEditText;
 
     private EditText quantityEditText;
@@ -37,6 +43,16 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     private EditText phoneEditText;
 
     private boolean storeHasChanged = false;
+
+    private Button button;
+
+    private Button saleButton;
+
+    private Button buyButton;
+
+    private Toast myToast;
+
+    private int quantity;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -74,7 +90,32 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         supplierEditText.setOnTouchListener(mTouchListener);
         phoneEditText.setOnTouchListener(mTouchListener);
 
+        button = findViewById(R.id.buttonCall);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneEditText.getText().toString()));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
+
+        saleButton = findViewById(R.id.sale);
+        saleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sales();
+            }
+        });
     }
+
+        public void sales(){
+            quantity = Integer.parseInt(quantityEditText.getText().toString());
+            quantity--;
+        }
 
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButton) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -156,7 +197,58 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         }
 
         ContentValues contentValues = new ContentValues();
+        // Check if product name field is empty and if yes, display a toast message to the user
+        if (TextUtils.isEmpty(nameString)) {
 
+         myToast =  Toast.makeText(this, "Product name is required", Toast.LENGTH_LONG);
+         myToast.show();
+         return;
+        }
+        // If product name is filled, save it to the database
+        else {
+            contentValues.put(StoreEntry.PRODUCT_NAME, nameString);
+        }
+
+        // Check if product name field is empty and if yes, display a toast message to the user
+        if (TextUtils.isEmpty(priceString)) {
+        myToast = Toast.makeText(this, "Price is required", Toast.LENGTH_LONG);
+        myToast.show();
+        return;
+        }
+        // If product name is filled, save it to the database
+        else {
+            contentValues.put(StoreEntry.PRICE, nameString);
+        }
+        // Check if product name field is empty and if yes, display a toast message to the user
+        if (TextUtils.isEmpty(quantityString)) {
+            myToast = Toast.makeText(this, "Quantity name is required", Toast.LENGTH_SHORT);
+            myToast.show();
+            return;
+        }
+        // If product name is filled, save it to the database
+        else {
+            contentValues.put(StoreEntry.QUANTITY, nameString);
+        }
+        // Check if product name field is empty and if yes, display a toast message to the user
+        if (TextUtils.isEmpty(supplierString)) {
+           myToast = Toast.makeText(this, "Supplier name is required", Toast.LENGTH_SHORT);
+           myToast.show();
+           return;
+        }
+        // If product name is filled, save it to the database
+        else {
+            contentValues.put(StoreEntry.SUPPLIER_NAME, nameString);
+        }
+        // Check if product name field is empty and if yes, display a toast message to the user
+        if (TextUtils.isEmpty(phoneString)) {
+            myToast = Toast.makeText(this, "Supplier's phone number is required", Toast.LENGTH_SHORT);
+            myToast.show();
+            return;
+        }
+        // If product name is filled, save it to the database
+        else {
+            contentValues.put(StoreEntry.SUPPLIER_PHONE_NUMBER, nameString);
+        }
         contentValues.put(StoreEntry.PRODUCT_NAME, nameString);
         contentValues.put(StoreEntry.PRICE, priceString);
         contentValues.put(StoreEntry.QUANTITY, quantityString);
@@ -182,6 +274,16 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if (currentStoreUri == null) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
+    }
+
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Delete this book?");
@@ -204,7 +306,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private void deleteInventory() {
-        if (currentStoreUri == null) {
+        if (currentStoreUri != null) {
             int row = getContentResolver().delete(currentStoreUri, null, null);
             if (row == 0) {
                 Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
@@ -264,7 +366,7 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
     public void onLoaderReset(Loader<Cursor> loader) {
         productEditText.setText("");
         priceEditText.setText(String.valueOf(0));
-        quantityEditText.setText(String.valueOf(0));
+        quantityEditText.setText(String.valueOf(1));
         supplierEditText.setText("");
         phoneEditText.setText("");
     }

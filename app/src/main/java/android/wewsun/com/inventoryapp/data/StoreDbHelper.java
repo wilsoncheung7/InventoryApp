@@ -14,7 +14,7 @@ public class StoreDbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 5;
 
-    public StoreDbHelper(Context context){
+    public StoreDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -22,7 +22,7 @@ public class StoreDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " + StoreEntry.TABLE_NAME + "("
-                + StoreEntry._ID + " INTEGER, "
+                + StoreEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + StoreEntry.PRODUCT_NAME + " TEXT, "
                 + StoreEntry.PRICE + " INTEGER, "
                 + StoreEntry.QUANTITY + " INTEGER, "

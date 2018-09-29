@@ -50,6 +50,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/buttonCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="call supplier's phone"/>
+
+            <Button
+                android:id="@+id/sale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="sale"
+                android:focusable="false"/>
+
+            <Button
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="buy"
+                android:focusable="false"/>
+
         </LinearLayout>
     </LinearLayout>
 

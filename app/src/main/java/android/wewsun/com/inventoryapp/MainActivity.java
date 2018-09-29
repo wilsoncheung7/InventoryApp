@@ -19,21 +19,21 @@ import android.view.View;
 import android.wewsun.com.inventoryapp.data.StoreContract.StoreEntry;
 
 import android.widget.AdapterView;
+
 import android.widget.ListView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-//    private StoreDbHelper dbHelper;
     private static final int STORE_LOADER = 0;
+
     StoreCursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        dbHelper = new StoreDbHelper(this);
 
         FloatingActionButton fat = (FloatingActionButton) findViewById(R.id.fab);
         fat.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ListView storeListView = findViewById(R.id.list);
 
         cursorAdapter = new StoreCursorAdapter(this, null);
+
+        View emptyView = findViewById(R.id.empty_view);
+        storeListView.setEmptyView(emptyView);
 
         storeListView.setAdapter(cursorAdapter);
 
@@ -62,7 +65,53 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+
         getLoaderManager().initLoader(STORE_LOADER, null, this);
+    }
+
+    public void salesButton(long product, int quantity){
+       if(quantity>=1){
+           quantity--;
+           Uri uri = ContentUris.withAppendedId(StoreEntry.CONTENT_URI, product);
+           ContentValues values = new ContentValues();
+           values.put(StoreEntry.QUANTITY, quantity);
+           int row = getContentResolver().update(
+                   uri,
+                   values,
+                   null,
+                   null
+           );
+           if(row == 1){
+               Toast.makeText(this,"sold", Toast.LENGTH_SHORT).show();
+           }
+           else {
+               Toast.makeText(this,"try again", Toast.LENGTH_SHORT).show();
+           }
+       }
+       else {
+           Toast.makeText(this,"out of stock", Toast.LENGTH_SHORT).show();
+       }
+    }
+
+    public void addButton(long product, int quantity){
+        if(quantity>=1){
+            quantity++;
+            Uri uri = ContentUris.withAppendedId(StoreEntry.CONTENT_URI, product);
+            ContentValues values = new ContentValues();
+            values.put(StoreEntry.QUANTITY, quantity);
+            int row = getContentResolver().update(
+                    uri,
+                    values,
+                    null,
+                    null
+            );
+            if(row == 1){
+                Toast.makeText(this,"bought", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this,"try again", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -71,14 +120,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    private void insertData(){
-
+    private void insertData() {
 
 
         ContentValues values = new ContentValues();
         values.put(StoreEntry.PRODUCT_NAME, "Sword Art Online");
-        values.put(StoreEntry.PRICE,16);
-        values.put(StoreEntry.QUANTITY, "3");
+        values.put(StoreEntry.PRICE, 16);
+        values.put(StoreEntry.QUANTITY, 3);
         values.put(StoreEntry.SUPPLIER_NAME, "Jackie");
         values.put(StoreEntry.SUPPLIER_PHONE_NUMBER, "01186");
 
@@ -93,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_save:
                 insertData();
                 return true;
@@ -104,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteAllBooks(){
+    private void deleteAllBooks() {
         int row = getContentResolver().delete(StoreEntry.CONTENT_URI, null, null);
         Log.v("MainActivity", row + " rows deleted from inventory database");
     }

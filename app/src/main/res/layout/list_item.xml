@@ -4,8 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
+    android:orientation="horizontal">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="1">
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
@@ -15,10 +19,35 @@
         android:textColor="#2B3D4D"  />
 
     <TextView
-        android:id="@+id/summary"
+        android:id="@+id/quantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="#AEB6BD"  />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="#AEB6BD"  />
+
+</LinearLayout>
+    <Button
+        android:id="@+id/sale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sale"
+        android:focusable="false"/>
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="buy"
+        android:focusable="false"/>
+
+
 </LinearLayout>
