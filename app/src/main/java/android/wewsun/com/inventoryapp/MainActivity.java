@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FloatingActionButton fat = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fat = findViewById(R.id.fab);
         fat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
