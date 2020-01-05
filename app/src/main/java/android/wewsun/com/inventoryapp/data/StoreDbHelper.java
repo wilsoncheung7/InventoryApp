@@ -8,7 +8,7 @@ import android.wewsun.com.inventoryapp.data.StoreContract.StoreEntry;
 
 public class StoreDbHelper extends SQLiteOpenHelper {
 
-    public static final String LOG_TAG = StoreDbHelper.class.getSimpleName();
+//    public static final String LOG_TAG = StoreDbHelper.class.getSimpleName();
 
     private static final String DATABASE_NAME = "inventory";
 

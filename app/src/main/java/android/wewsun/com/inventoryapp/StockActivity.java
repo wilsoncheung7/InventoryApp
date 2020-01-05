@@ -3,6 +3,7 @@ package android.wewsun.com.inventoryapp;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
@@ -54,6 +55,8 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private int quantity;
 
+    private String quantities;
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -103,18 +106,36 @@ public class StockActivity extends AppCompatActivity implements LoaderManager.Lo
             }
         });
 
-        saleButton = findViewById(R.id.sale);
+        saleButton = findViewById(R.id.sales);
         saleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sales();
             }
         });
+
+        buyButton = findViewById(R.id.added);
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                add();
+            }
+        });
     }
 
         public void sales(){
-            quantity = Integer.parseInt(quantityEditText.getText().toString());
-            quantity--;
+
+            quantity = Integer.parseInt(quantityEditText.getText().toString())-1;
+            if (quantity>=0) {
+                quantities = String.valueOf(quantity);
+                quantityEditText.setText(quantities);
+            }
+        }
+
+        public void add(){
+            quantity = Integer.parseInt(quantityEditText.getText().toString())+1;
+            quantities = String.valueOf(quantity);
+            quantityEditText.setText(quantities);
         }
 
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButton) {
